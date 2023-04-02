@@ -1,0 +1,45 @@
+Problem Type:
+# Plane strain problem - 0  Plane stress problem - 1
+0
+End of PT
+
+Quadrature Degree:
+# 1 ~ 6
+3
+End of QD
+
+Material Property:
+# Young’s modulus
+1.0e5
+# Poisson’s ratio
+0.3
+End of MP
+
+Dirichlet Boundary:
+# Number of boundary
+0
+# Name
+# Direction x or y
+Diri-1
+x
+Diri-2
+Y
+End of DB
+
+Neumann Boundary:
+# Number of boundary
+2
+# Name
+# Field function as a vector or only a scalar value (along the outside normals)
+Neum-1
+-5
+Neum-2
+-20
+End of NB
+
+Body force:
+# Field function as a vector [fx, fy]
+@(x,y) [0,0]
+End of BF
+
+End of File
