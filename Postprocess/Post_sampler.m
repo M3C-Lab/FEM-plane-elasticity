@@ -1,4 +1,4 @@
-function sp_result = Post_sampler(msh, info, uh, sp_points, frame)
+function sp_result = Post_sampler(msh, Elem_degree, info, uh, sp_points, frame)
 % To sample some random points in each element, and get the result data of them.
 % frame = 'Car'--Cartesian , 'Cyl'--cylindrical
 addpath('Construct_K_F')
@@ -23,8 +23,12 @@ sp_result.Stress = zeros(total_sp, 3);
 
 sp_result.h = 0;
 % The max mesh size.
-
-for ee = 1 : msh.nbTriangles
+if Elem_degree == 1
+    nElem = msh.nbTriangles;
+elseif Elem_degree == 2
+    nElem = msh.nbTriangles6;
+end
+for ee = 1 : nElem
     p1 = [msh.POS(info.IEN_v(1, ee), 1), msh.POS(info.IEN_v(1, ee), 2)]';
     p2 = [msh.POS(info.IEN_v(2, ee), 1), msh.POS(info.IEN_v(2, ee), 2)]';
     p3 = [msh.POS(info.IEN_v(3, ee), 1), msh.POS(info.IEN_v(3, ee), 2)]';
@@ -34,14 +38,13 @@ for ee = 1 : msh.nbTriangles
         sp_result.h = h_ele;
     end
     
-    [J, phys2rst] = Mapping_p2rst(p1, p2, p3);
+    phys2rst = Mapping_p2rst(p1, p2, p3);
     
-    uh_ele = [uh(2 * info.IEN_v(1, ee) - 1);
-              uh(2 * info.IEN_v(1, ee));
-              uh(2 * info.IEN_v(2, ee) - 1);
-              uh(2 * info.IEN_v(2, ee));
-              uh(2 * info.IEN_v(3, ee) - 1);
-              uh(2 * info.IEN_v(3, ee))];
+    uh_ele = zeros(6 * Elem_degree, 1);
+    for aa = 1 : 3 * Elem_degree
+        uh_ele(2 * aa - 1) = uh(2 * info.IEN_v(aa, ee) - 1);
+        uh_ele(2 * aa) = uh(2 * info.IEN_v(aa, ee));
+    end
     
     for ss = 1 : sp_points
         sp = Random_tricoor();
@@ -57,16 +60,15 @@ for ee = 1 : msh.nbTriangles
             sp_result.Location(sp_points * (ee - 1) + ss, 5) = cyl_coor(2);
         end
         
-        dN1_dx = TriBasis(1, 1, 0, sp_x, sp_y, phys2rst);
-        dN2_dx = TriBasis(2, 1, 0, sp_x, sp_y, phys2rst);
-        dN3_dx = TriBasis(3, 1, 0, sp_x, sp_y, phys2rst);
-        dN1_dy = TriBasis(1, 0, 1, sp_x, sp_y, phys2rst);
-        dN2_dy = TriBasis(2, 0, 1, sp_x, sp_y, phys2rst);
-        dN3_dy = TriBasis(3, 0, 1, sp_x, sp_y, phys2rst);
-        
-        B_sp = [dN1_dx,      0, dN2_dx,      0, dN3_dx,      0;
-                       0, dN1_dy,      0, dN2_dy,      0, dN3_dy;
-                  dN1_dy, dN1_dx, dN2_dy, dN2_dx, dN3_dy, dN3_dx];
+        B_sp = zeros(3, 6 * Elem_degree);
+        for aa = 1 : 3 * Elem_degree
+            dNa_dx = TriBasis(Elem_degree, aa, 1, 0, sp_x, sp_y, phys2rst);
+            dNa_dy = TriBasis(Elem_degree, aa, 0, 1, sp_x, sp_y, phys2rst);
+            B_N = [dNa_dx,      0;
+                        0, dNa_dy;
+                   dNa_dy, dNa_dx];
+            B_sp(1 : 3, 2*aa - 1 : 2*aa) = B_N;
+        end
         
         % The strain at sampling points.
         eps_sp = B_sp * uh_ele;

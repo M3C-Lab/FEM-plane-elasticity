@@ -5,10 +5,15 @@ function IEN_s = get_IEN_s(msh, data, IEN_v)
 %           (as a cell).
 %       IEN_s{i}: The IEN matrix of the 'i'th Neumann boundary
 %       IEN_s{i}(*, e): The 'e'th element.
+%     If data.Elem_degree = 1:
 %       IEN_s{i}(1, e), IEN_s{i}(2, e): The nodes of the 'e'th element.
 %       IEN_s{i}(3, e): Which triangular element the 'e'th line element 
-%                          is located at.
-%       IEN_s{i}(4, e): The other node of the triangular element.
+%                       is located at.
+%     If data.Elem_degree = 2:
+%       IEN_s{i}(1, e), IEN_s{i}(2, e), IEN_s{i}(3, e): The nodes of 
+%                       the 'e'th element.
+%       IEN_s{i}(4, e): Which triangular element the 'e'th line element 
+%                       is located at.
 
 IEN_s = cell(1, data.nbNeu);
 
@@ -19,50 +24,88 @@ for I = 1 : data.nbNeu
             ii = msh.PhyGrp{J, 2};
             
             nbLineEle = 0;
-            % Search for element number on a Dirichlet boundary.
-            for jj = 1 : msh.nbLines
-                if msh.LINES(jj, 3) == ii
-                    nbLineEle = nbLineEle + 1;
-                end      
+            % Search for element number on a Neumann boundary.
+            if data.Elem_degree == 1
+                for jj = 1 : msh.nbLines
+                    if msh.LINES(jj, 3) == ii
+                        nbLineEle = nbLineEle + 1;
+                    end      
+                end
+            elseif data.Elem_degree == 2
+                for jj = 1 : msh.nbLines3
+                    if msh.LINES3(jj, 4) == ii
+                        nbLineEle = nbLineEle + 1;
+                    end      
+                end
             end
             
             % Construct IEN.
-            N_IEN = zeros(4, nbLineEle);
+            N_IEN = zeros(data.Elem_degree + 2, nbLineEle);
             temp = 1;
-            for jj = 1 : msh.nbLines
-                if msh.LINES(jj, 3) == ii
-                    % The nodes of the line element.
-                    N_IEN(1, temp) = msh.LINES(jj, 1);
-                    N_IEN(2, temp) = msh.LINES(jj, 2);
-            
-                    % Search the location of each line element.
-                    node_sum = N_IEN(1, temp) + N_IEN(2, temp);
-                    node_diff = abs(N_IEN(1, temp) - N_IEN(2, temp));
-                    % Compare 'node1 + node2' and '|node1 - node2|' respectively.
-                    for kk = 1 : msh.nbTriangles       
-                        for ll = 1 : 3
-                            choices = [1, 2, 3];
-                            choices(ll) = [ ];
-                            sum_test = IEN_v(choices(1), kk) + IEN_v(choices(2), kk);
-                            if sum_test == node_sum
-                                diff_test = abs(IEN_v(choices(1), kk) - IEN_v(choices(2), kk));
-                                if diff_test == node_diff
-                                    N_IEN(3, temp) = kk;
-                                    % The 'temp'th line element is the boundary of
-                                    % the 'kk'th triangular element.
-                                    N_IEN(4, temp) = IEN_v(ll, kk);
-                                    % 'IEN_v(ll, kk)' is the other node.
+            if data.Elem_degree == 1
+                for jj = 1 : msh.nbLines
+                    if msh.LINES(jj, 3) == ii
+                        % The nodes of the line element.
+                        N_IEN(1, temp) = msh.LINES(jj, 1);
+                        N_IEN(2, temp) = msh.LINES(jj, 2);
+                        % Locate the triangular element.
+                        for ee = 1 : msh.nbTriangles
+                            for mm = 1 : 3 * data.Elem_degree
+                                if IEN_v(mm, ee) == N_IEN(1, temp)
+                                    for nn = 1 : 3 * data.Elem_degree
+                                        if IEN_v(nn, ee) == N_IEN(2, temp)
+                                            N_IEN(3, temp) = ee;
+                                            break;
+                                        end
+                                    end
+                                end
+                                if N_IEN(3, temp) ~= 0
                                     break;
                                 end
                             end
+                            if N_IEN(3, temp) ~= 0
+                                break;
+                            end
                         end
-                
-                        if N_IEN(3, temp) ~= 0
-                            break;
+                        temp = temp + 1;
+                    end       
+                end
+            elseif data.Elem_degree == 2
+                for jj = 1 : msh.nbLines3
+                    if msh.LINES3(jj, 4) == ii
+                        % The nodes of the line element.
+                        N_IEN(1, temp) = msh.LINES3(jj, 1);
+                        N_IEN(2, temp) = msh.LINES3(jj, 2);
+                        N_IEN(3, temp) = msh.LINES3(jj, 3);
+                        % Locate the triangular element.
+                        for ee = 1 : msh.nbTriangles6
+                            for kk = 1 : 3 * data.Elem_degree
+                                if IEN_v(kk, ee) == N_IEN(1, temp)
+                                    for mm = 1 : 3 * data.Elem_degree
+                                        if IEN_v(mm, ee) == N_IEN(2, temp)
+                                            for nn = 1 : 3 * data.Elem_degree
+                                                if IEN_v(nn, ee) == N_IEN(3, temp)
+                                                    N_IEN(4, temp) = ee;
+                                                    break;
+                                                end
+                                            end
+                                        end
+                                        if N_IEN(4, temp) ~= 0
+                                            break;
+                                        end
+                                    end
+                                end
+                                if N_IEN(4, temp) ~= 0
+                                    break;
+                                end
+                            end
+                            if N_IEN(4, temp) ~= 0
+                                break;
+                            end
                         end
+                        temp = temp + 1;
                     end
-                    temp = temp + 1;
-                end       
+                end
             end
             % Put it into the cell 
             IEN_s{I} = N_IEN;

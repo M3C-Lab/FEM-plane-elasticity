@@ -4,12 +4,17 @@ function f_ele = Add_Neu(msh, data, info, ee, f_ele, phys2rst)
 for ii = 1 : data.nbNeu
     for jj = 1 : size(info.IEN_s{ii}, 2)
         % Search for triangular elements adjoining Neumann boundaries.
-        if ee == info.IEN_s{ii}(3, jj)
+        if ee == info.IEN_s{ii}(data.Elem_degree + 2, jj)
             % Search for nodes of line elements on Neumann boundaries.
-            supported_N = [1, 2, 3];
-            for kk = 1 : 3
-                if info.IEN_v(kk, ee) == info.IEN_s{ii}(4, jj)
-                    supported_N(kk) = [ ];
+            
+            supported_basis = zeros(data.Elem_degree + 1, 1);
+            temp = 1;
+            for kk = 1 : (3 * data.Elem_degree)
+                for ll = 1 : (data.Elem_degree + 1)
+                    if info.IEN_v(kk, ee) == info.IEN_s{ii}(ll, jj)
+                       supported_basis(temp) = kk;
+                       temp = temp + 1;
+                    end
                 end
             end
             
@@ -20,10 +25,11 @@ for ii = 1 : data.nbNeu
             % of line elements.
             [j, plqp] = Mapping_lineqp(info.lqp, n1, n2);
             
-            for node = 1 : 2
+            for node = 1 : (data.Elem_degree + 1)
                 Nah_node = [0, 0]';
                 for qua = 1 : size(info.lqp)
-                    Na_qua = TriBasis(supported_N(node), 0, 0, plqp(1, qua), plqp(2, qua), phys2rst);
+                    Na_qua = TriBasis(data.Elem_degree, supported_basis(node),...
+                        0, 0, plqp(1, qua), plqp(2, qua), phys2rst);
                     
                     if isa(data.NeuBC{ii, 2}, 'function_handle')
                         NeuBC_qua = data.NeuBC{ii, 2}(plqp(1, qua), plqp(2, qua));
@@ -40,8 +46,8 @@ for ii = 1 : data.nbNeu
                 end
                 
                 % Add Neumann BC.
-                f_ele(2 * supported_N(node) - 1) = f_ele(2 * supported_N(node) - 1) + Nah_node(1);
-                f_ele(2 * supported_N(node)) = f_ele(2 * supported_N(node)) + Nah_node(2);
+                f_ele(2 * supported_basis(node) - 1) = f_ele(2 * supported_basis(node) - 1) + Nah_node(1);
+                f_ele(2 * supported_basis(node)) = f_ele(2 * supported_basis(node)) + Nah_node(2);
             end
         end
     end

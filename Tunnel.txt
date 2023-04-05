@@ -1,0 +1,57 @@
+Problem Type:
+# Plane strain problem - 0  Plane stress problem - 1
+0
+End of PT
+
+Quadrature Degree:
+# 1 ~ 6
+4
+End of QD
+
+Element Degree:
+# 1 or 2
+2
+End of ED
+
+Material Property:
+# Young’s modulus
+1.0e5
+# Poisson’s ratio
+0.3
+End of MP
+
+Dirichlet Boundary:
+# Number of Dirichlet boundary
+0
+# Name
+# Direction x or y
+Diri-1
+0
+Diri-2
+0
+End of DB
+
+Neumann Boundary:
+# Number of Neumann boundary
+2
+# Name
+# Field function as a vector or only a scalar value (along the outside normals)
+Inner-circle
+-15
+Outer-circle
+-24
+End of NB
+
+Body force:
+# Field function as a vector [fx, fy]
+@(x,y) [0,0]
+End of BF
+
+End of File
+
+# The exact solution:
+# σrr = - pa * (b^2/r^2 - 1) / (b^2/a^2 - 1) - pb * (1 - a^2/r^2) / (1 - a^2/b^2)
+# σθθ = pa * (b^2/r^2 + 1) / (b^2/a^2 - 1) - pb * (1 + a^2/r^2) / (1 - a^2/b^2)
+# τrθ = 0
+# where a = 2 is the inner radius, b = 4 is the outer radius,
+# pa is the pressure on the inner circle, pa is the pressure on the outer circle.

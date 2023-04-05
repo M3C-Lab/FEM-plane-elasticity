@@ -23,12 +23,11 @@ Curve Loop(1) = {4, 1, 2, 3};
 //+
 Plane Surface(1) = {1};
 //+
-Physical Curve("Diri-1") = {4};
+Physical Surface("square") = {1};//+
+Physical Curve("x-fixed") = {4};
 //+
-Physical Curve("Diri-2") = {1};
+Physical Curve("y-fixed") = {1};
 //+
-Physical Curve("Neum-1") = {2};
+Physical Curve("right-traction") = {2};
 //+
-Physical Curve("Neum-2") = {3};
-//+
-Physical Surface("Surf") = {1};
+Physical Curve("upper-traction") = {3};

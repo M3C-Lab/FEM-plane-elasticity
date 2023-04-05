@@ -12,9 +12,9 @@ Curve Loop(1) = {2};
 Curve Loop(2) = {1};
 //+
 Plane Surface(1) = {1, 2};
+////+
+Physical Curve("Outer-circle") = {2};
 //+
-Physical Curve("Neum-1") = {1};
+Physical Curve("Inner-circle") = {1};
 //+
-Physical Curve("Neum-2") = {2};
-//+
-Physical Surface("tunnel") = {1};
+Physical Surface("Wall") = {1};

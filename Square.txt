@@ -1,0 +1,54 @@
+Problem Type:
+# Plane strain problem - 0  Plane stress problem - 1
+0
+End of PT
+
+Quadrature Degree:
+# 1 ~ 6
+3
+End of QD
+
+Element Degree:
+# 1 or 2
+2
+End of ED
+
+Material Property:
+# Young’s modulus
+1.0e5
+# Poisson’s ratio
+0.3
+End of MP
+
+Dirichlet Boundary:
+# Number of Dirichlet boundary
+2
+# Name
+# Direction x or y
+x-fixed
+x
+y-fixed
+y
+End of DB
+
+Neumann Boundary:
+# Number of Neumann boundary
+2
+# Name
+# Field function as a vector [Tx, Ty] or only a scalar value (along the outside normals)
+right-traction
+@(x,y) [(134615.384615385 * exp(x) + 57692.3076923077 * exp(y))/1000,0]
+upper-traction
+@(x,y) [0, (134615.384615385 * exp(y) + 57692.3076923077 * exp(x))/1000]
+End of NB
+
+Body force:
+# Field function as a vector [fx, fy]
+@(x,y) [-134615.384615385 * exp(x), -134615.384615385 * exp(y)]/1000
+End of BF
+
+End of File
+
+# The exact solution:
+# ux = (exp(x)-1) / 1000,  uy = (exp(y)-1) / 1000.
+# Thus the shear stress τxy should be zero.

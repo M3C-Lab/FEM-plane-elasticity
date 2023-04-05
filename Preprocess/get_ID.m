@@ -19,29 +19,50 @@ if data.nbDir ~= 0
                 ii = msh.PhyGrp{J, 2};
 
                 nbLineEle = 0;
-                % Search for element number on a Dirichlet boundary.
-                for jj = 1 : msh.nbLines
-                    if msh.LINES(jj, 3) == ii
-                        nbLineEle = nbLineEle + 1;
-                    end      
-                end
-
-                % Search for element info.
-                LineEle = zeros(1, nbLineEle);
-                temp = 1;
-                for jj = 1 : msh.nbLines
-                    if msh.LINES(jj, 3) == ii
-                        LineEle(temp) = jj;
-                        temp = temp + 1;
+                % Search for elements on a Dirichlet boundary.
+                if data.Elem_degree == 1
+                    for jj = 1 : msh.nbLines
+                        if msh.LINES(jj, 3) == ii
+                            nbLineEle = nbLineEle + 1;
+                        end      
+                    end
+                elseif data.Elem_degree == 2
+                    for jj = 1 : msh.nbLines3
+                        if msh.LINES3(jj, 4) == ii
+                            nbLineEle = nbLineEle + 1;
+                        end      
                     end
                 end
+                
+                LineEle = zeros(nbLineEle, 1);
+                temp = 1;
+                if data.Elem_degree == 1
+                    for jj = 1 : msh.nbLines
+                        if msh.LINES(jj, 3) == ii
+                            LineEle(temp) = jj;
+                            temp = temp + 1;
+                        end      
+                    end
+                elseif data.Elem_degree == 2
+                    for jj = 1 : msh.nbLines3
+                        if msh.LINES3(jj, 4) == ii
+                            LineEle(temp) = jj;
+                            temp = temp + 1;
+                        end      
+                    end
+                end
+                
 
                 % Search for node info.
                 temp = 1;
-                LineNod = zeros(1, 2* nbLineEle);
+                LineNod = zeros(1, 2 * nbLineEle);
                 for kk = 1 : nbLineEle
-                    for jj = 1 : 2
-                        LineNod(temp) = msh.LINES(LineEle(kk), jj);
+                    for jj = 1 : (data.Elem_degree + 1)
+                        if data.Elem_degree == 1
+                            LineNod(temp) = msh.LINES(LineEle(kk), jj);
+                        elseif data.Elem_degree == 2
+                            LineNod(temp) = msh.LINES3(LineEle(kk), jj);
+                        end
                         temp = temp + 1;
                     end
                 end

@@ -33,6 +33,12 @@ while true
         data.Quad_degree = str2double(qd);
     end
     
+    if strcmp(dline, 'Element Degree:')
+        ed = fgetl(fl);
+        ed = Jump(ed, fl);
+        data.Elem_degree = str2double(ed);
+    end
+    
     if strcmp(dline,'Dirichlet Boundary:')
         nbDir = fgetl(fl);
         nbDir = Jump(nbDir, fl);
