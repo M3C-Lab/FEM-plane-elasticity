@@ -10,7 +10,7 @@ End of QD
 
 Element Degree:
 # 1 or 2
-1
+2
 End of ED
 
 Material Property:

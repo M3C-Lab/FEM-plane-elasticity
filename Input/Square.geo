@@ -1,5 +1,8 @@
 SetFactory("OpenCASCADE");
 Mesh.MshFileVersion = 2;
+Mesh.ElementOrder=2;
+Mesh.CharacteristicLengthFactor=0.03;
+
 Point(1) = {0, 0, 0, 1.0};
 Point(2) = {1, 0, 0, 1.0};
 Point(3) = {1, 1, 0, 1.0};

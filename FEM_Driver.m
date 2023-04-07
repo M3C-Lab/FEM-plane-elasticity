@@ -9,7 +9,7 @@ fprintf('\n');
 
 tic;
 disp('(2) Construct stiffness K and load F.');
-[K, F] = Eq_Constructor(msh, data, info);
+[K, F] = Assembly(msh, data, info);
 toc;
 fprintf('\n');
 

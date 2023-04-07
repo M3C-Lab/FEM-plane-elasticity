@@ -1,4 +1,4 @@
-function [K, F] = Eq_Constructor(msh, data, info)
+function [K, F] = Assembly(msh, data, info)
 % To construct the stiffness matrix K and the load vector F.
 addpath('Assembly');
 
@@ -14,7 +14,7 @@ while info.ID(mm, nn) == 0
 end
 n_eq = info.ID(mm, nn);
 
-K = sparse(n_eq, n_eq); F = zeros(n_eq, 1);
+K = spalloc(n_eq, n_eq, 25*n_eq); F = zeros(n_eq, 1);
 
 if data.Elem_degree == 1
     nElem = msh.nbTriangles;
