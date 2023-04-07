@@ -1,6 +1,6 @@
 function [K, F] = Eq_Constructor(msh, data, info)
 % To construct the stiffness matrix K and the load vector F.
-addpath('Construct_K_F');
+addpath('Assembly');
 
 % Confirm the number of equations.
 mm = 2; nn = msh.nbNod;

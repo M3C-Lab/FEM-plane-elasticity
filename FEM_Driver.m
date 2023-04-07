@@ -3,7 +3,7 @@ addpath('Postprocess');
 
 tic;
 disp('(1) Input data and preprocess.');
-[msh, data, info] = Preprocessor('Square.msh', 'Square.txt');
+[msh, data, info] = Preprocessor('./Input/Square.msh', './Input/Square.txt');
 toc;
 fprintf('\n');
 
