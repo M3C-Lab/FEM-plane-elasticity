@@ -1,4 +1,4 @@
-function [msh, data, info] = Preprocessor(msh_file,data_file)
+function [msh, data, info] = Preprocessor(msh_file, data_file)
 addpath('Preprocess');
 
 % Mesh configuration.
