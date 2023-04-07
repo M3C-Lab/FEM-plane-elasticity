@@ -1,7 +1,7 @@
 function sp_result = Post_sampler(msh, Elem_degree, info, uh, sp_points, frame)
 % To sample some random points in each element, and get the result data of them.
 % frame = 'Car'--Cartesian , 'Cyl'--cylindrical
-addpath('Construct_K_F')
+addpath('Assembly')
 
 rng('shuffle');
 total_sp = msh.nbTriangles * sp_points;
@@ -14,12 +14,8 @@ else
     disp("Post_sampler: Wrong frame! Input 'Car' or 'Cyl' as the last parameter.");
     return;
 end
-% Location(x, y, the element number) in Cartesian frame.
-% Location(x, y, the element number, r, 牟) in cylindrical frame.
 
 sp_result.Stress = zeros(total_sp, 3);
-% Stress(考xx, 考yy, 而xy) in Cartesian frame.
-% Stress(考rr, 考牟牟, 而r牟) in cylindrical frame.
 
 sp_result.h = 0;
 % The max mesh size.
