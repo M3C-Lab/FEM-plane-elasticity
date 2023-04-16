@@ -4,7 +4,6 @@ function Cylindrical = cylindrical_coor(Cartesian)
 %   Cartesian: [x; y] coordinates.
 % Output:
 %   Cylindrical: [r; theta] coordinates.
-% Note: These coordinates are only suitable to example4.2!!!!!!!!!
 
 r = sqrt(Cartesian(1)^2 + Cartesian(2)^2);
 
@@ -24,3 +23,5 @@ end
 Cylindrical = [r; theta];
 
 end
+
+% EOF

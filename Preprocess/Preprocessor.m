@@ -1,5 +1,4 @@
-function [msh, data, info] = Preprocessor(msh_file, data_file)
-addpath('Preprocess');
+function [msh, data, info] = Preprocessor(msh_file,data_file)
 
 % Mesh configuration.
 msh = load_gmsh2(msh_file);
@@ -30,7 +29,7 @@ info.normals = get_normals(msh, data.Elem_degree, info.IEN_v, info.IEN_s);
 disp('Outside normals prepared.');
 
 % The D matrix.
-info.D = get_D(data);
+info.D_elast = get_D(data);
 
 % Quadrature points, weights and the number of points for parent triangular element.
 [info.tqp, info.twq, info.ntqp] = TriQuad(data.Quad_degree);
@@ -38,7 +37,11 @@ info.D = get_D(data);
 % Quadreture points and weights for parent line element.
 [info.lqp, info.lwq] = Gauss(data.Quad_degree, -1, 1);
 
-return;
+% Print some information about the problem.
+PrintData(msh, data);
 
+return;
 end
+
+% EOF
 

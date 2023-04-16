@@ -1,5 +1,9 @@
+//+
 SetFactory("OpenCASCADE");
 Mesh.MshFileVersion = 2;
+Mesh.ElementOrder = 2;
+Mesh.CharacteristicLengthFactor = 0.03;
+
 Circle(1) = {0, 0, 0, 2, 0, 2*Pi};
 Circle(2) = {0, 0, 0, 4, 0, 2*Pi};
 Curve Loop(1) = {2};

@@ -1,10 +1,11 @@
-function sp_result = Post_sampler(msh, Elem_degree, info, uh, sp_points, frame)
+function sp_result = Sampler(msh, Elem_degree, info, uh, n_sp, frame)
 % To sample some random points in each element, and get the result data of them.
 % frame = 'Car'--Cartesian , 'Cyl'--cylindrical
-addpath('Assembly')
+addpath('Assembly&Solving')
 
-rng('shuffle');
-total_sp = msh.nbTriangles * sp_points;
+sampling_points = Regular_tricoor(n_sp);
+nb_sp = size(sampling_points, 2);
+total_sp = msh.nbTriangles * nb_sp;
 
 if strcmp(frame, 'Car')
     sp_result.Location = zeros(total_sp, 3);
@@ -17,7 +18,7 @@ end
 
 sp_result.Stress = zeros(total_sp, 3);
 
-sp_result.h = 0;
+sp_result.h_meshsize = 0;
 % The max mesh size.
 if Elem_degree == 1
     nElem = msh.nbTriangles;
@@ -30,8 +31,8 @@ for ee = 1 : nElem
     p3 = [msh.POS(info.IEN_v(3, ee), 1), msh.POS(info.IEN_v(3, ee), 2)]';
     
     h_ele = 2 * circumcircle([p1, p2, p3], 0);
-    if h_ele > sp_result.h
-        sp_result.h = h_ele;
+    if h_ele > sp_result.h_meshsize
+        sp_result.h_meshsize = h_ele;
     end
     
     phys2rst = Mapping_p2rst(p1, p2, p3);
@@ -42,18 +43,18 @@ for ee = 1 : nElem
         uh_ele(2 * aa) = uh(2 * info.IEN_v(aa, ee));
     end
     
-    for ss = 1 : sp_points
-        sp = Random_tricoor();
+    for ss = 1 : nb_sp
+        sp = sampling_points(:, ss); % The area coordinate of a sampling point.
         sp_x = sp(1) * p1(1) + sp(2) * p2(1) + sp(3) * p3(1);
         sp_y = sp(1) * p1(2) + sp(2) * p2(2) + sp(3) * p3(2);
         
-        sp_result.Location(sp_points * (ee - 1) + ss, 1) = sp_x;
-        sp_result.Location(sp_points * (ee - 1) + ss, 2) = sp_y;
-        sp_result.Location(sp_points * (ee - 1) + ss, 3) = ee;
+        sp_result.Location(nb_sp * (ee - 1) + ss, 1) = sp_x;
+        sp_result.Location(nb_sp * (ee - 1) + ss, 2) = sp_y;
+        sp_result.Location(nb_sp * (ee - 1) + ss, 3) = ee;
         if strcmp(frame, 'Cyl')
             cyl_coor = cylindrical_coor([sp_x; sp_y]);
-            sp_result.Location(sp_points * (ee - 1) + ss, 4) = cyl_coor(1);
-            sp_result.Location(sp_points * (ee - 1) + ss, 5) = cyl_coor(2);
+            sp_result.Location(nb_sp * (ee - 1) + ss, 4) = cyl_coor(1);
+            sp_result.Location(nb_sp * (ee - 1) + ss, 5) = cyl_coor(2);
         end
         
         B_sp = zeros(3, 6 * Elem_degree);
@@ -70,20 +71,22 @@ for ee = 1 : nElem
         eps_sp = B_sp * uh_ele;
         
         % The stress at sampling points.
-        sgm_sp = info.D * eps_sp;
+        sgm_sp = info.D_elast * eps_sp;
         if strcmp(frame, 'Car')
-            sp_result.Stress(sp_points * (ee - 1) + ss, 1) = sgm_sp(1);
-            sp_result.Stress(sp_points * (ee - 1) + ss, 2) = sgm_sp(2);
-            sp_result.Stress(sp_points * (ee - 1) + ss, 3) = sgm_sp(3);
+            sp_result.Stress(nb_sp * (ee - 1) + ss, 1) = sgm_sp(1);
+            sp_result.Stress(nb_sp * (ee - 1) + ss, 2) = sgm_sp(2);
+            sp_result.Stress(nb_sp * (ee - 1) + ss, 3) = sgm_sp(3);
         elseif strcmp(frame, 'Cyl')
             sgm_cyl = cylindrical_stress(sgm_sp, cyl_coor(2));
-            sp_result.Stress(sp_points * (ee - 1) + ss, 1) = sgm_cyl(1);
-            sp_result.Stress(sp_points * (ee - 1) + ss, 2) = sgm_cyl(2);
-            sp_result.Stress(sp_points * (ee - 1) + ss, 3) = sgm_cyl(3);
+            sp_result.Stress(nb_sp * (ee - 1) + ss, 1) = sgm_cyl(1);
+            sp_result.Stress(nb_sp * (ee - 1) + ss, 2) = sgm_cyl(2);
+            sp_result.Stress(nb_sp * (ee - 1) + ss, 3) = sgm_cyl(3);
         end
     end
 end
 
 return;
 end
+
+% EOF
 

@@ -1,6 +1,5 @@
 function J = get_J(msh, info, Elem_degree, ee, area_coor)
 % To get the Jacobian of a point in an element with isoparametric mapping.
-% This formulation is on the page 133 (4.2.6) of 《有限单元法》.
 
 p1 = [msh.POS(info.IEN_v(1, ee), 1), msh.POS(info.IEN_v(1, ee), 2)]';
 p2 = [msh.POS(info.IEN_v(2, ee), 1), msh.POS(info.IEN_v(2, ee), 2)]';
@@ -45,3 +44,4 @@ J = det(Jacobian_matrix);
 return;
 end
 
+% EOF

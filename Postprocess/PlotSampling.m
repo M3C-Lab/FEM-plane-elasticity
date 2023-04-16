@@ -5,7 +5,7 @@ X = sp_result.Location(:, 1);
 Y = sp_result.Location(:, 2);
 object = sp_result.Stress(:, obj);
 
-SHP = alphaShape (X, Y, 0.75 * sp_result.h, 'HoleThreshold', 1e-6);
+SHP = alphaShape (X, Y, 0.75 * sp_result.h_meshsize, 'HoleThreshold', 1e-6);
 TRI = alphaTriangulation(SHP);
 
 figure(nb)
@@ -21,3 +21,4 @@ set(gcf, 'unit', 'centimeters', 'position', [3 20 20 17.5]);
 
 end
 
+% EOF

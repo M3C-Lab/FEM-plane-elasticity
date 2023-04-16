@@ -113,6 +113,6 @@ for I = 1 : data.nbNeu
         end
     end
 end
-
 end
 
+% EOF

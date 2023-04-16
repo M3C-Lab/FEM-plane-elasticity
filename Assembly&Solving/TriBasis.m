@@ -13,7 +13,6 @@ function poly = TriBasis(degree, i, der_x, der_y, x, y, phys2rst)
 %   phys2rst: The mapping matrix given by Mapping_p2rst.m .
 % Output:
 %   poly: The value of basis function or derivative.
-% 关于直角坐标与面积坐标的转换关系，可参看清华大学出版社《有限单元法》第57页及第106页。
 
 r = phys2rst(1, 1) * x + phys2rst(1, 2) * y + phys2rst(1, 3);
 s = phys2rst(2, 1) * x + phys2rst(2, 2) * y + phys2rst(2, 3);
@@ -167,3 +166,4 @@ end
 
 end
 
+% EOF

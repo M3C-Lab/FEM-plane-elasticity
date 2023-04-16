@@ -21,7 +21,7 @@ while true
     if strcmp(dline,'Material Property:')
         E = fgetl(fl);
         E = Jump(E, fl);
-        data.E = str2double(E);
+        data.E_Youngs = str2double(E);
         nu = fgetl(fl);
         nu = Jump(nu, fl);
         data.nu = str2double(nu);
@@ -54,12 +54,6 @@ while true
             data.DirBC{temp, 1} = B;
             BC = fgetl(fl);
             BC = Jump(BC, fl);
-            while BC(1) == ' '
-                BC(1) = [ ];
-            end
-            while BC(end) == ' '
-                BC(end) = [ ];
-            end
             data.DirBC{temp, 2} = BC(1);
             BC(1) = [ ];
             while isempty(BC) == 0
@@ -113,3 +107,4 @@ end
 return;
 end
 
+% EOF

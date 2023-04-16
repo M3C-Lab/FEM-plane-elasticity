@@ -1,7 +1,7 @@
-function uh = Solver(msh, info, K, F)
+function uh = Solver(msh, info, K_stif, F_load)
 % To get the displacement vector involved by Dirichlet BC
 
-d = K \ F;
+d = K_stif \ F_load;
 uh = zeros(msh.nbNod, 1);
 
 for nn = 1 : msh.nbNod
@@ -14,3 +14,4 @@ end
 
 end
 
+%EOF

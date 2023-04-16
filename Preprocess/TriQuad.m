@@ -183,6 +183,7 @@ end
 
 % For triangles in a plane.
 wq = 0.5 * wq;
-
 end
+
+% EOF
 

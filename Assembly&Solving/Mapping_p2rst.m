@@ -10,7 +10,6 @@ function phys2rst = Mapping_p2rst(p1, p2, p3)
 %       r = phys2rs(1,1) * x + phys2rs(1,2) * y + phys2rs(1,3)
 %       s = phys2rs(2,1) * x + phys2rs(2,2) * y + phys2rs(2,3)
 %       t = phys2rs(3,1) * x + phys2rs(3,2) * y + phys2rs(3,3)
-% 关于直角坐标与面积坐标的转换关系，可参看清华大学出版社《有限单元法》第57页及第106页。
 
 % If we require the inverse mapping in the linear element:
 %   x = x1 * r + x2 * s + x3 * t
@@ -21,7 +20,6 @@ function phys2rst = Mapping_p2rst(p1, p2, p3)
 %     = x1 * N1 + x2 * N2 + x3 * N3 + x4 * N4 + x5 * N5 + x6 * N6
 % The basis functions should be derived carefully.
 
-% The formulation in Page 57,58 of 《有限单元法》.
 a1 = p2(1) * p3(2) - p3(1) * p2(2);
 b1 = p2(2) - p3(2);
 c1 = -p2(1) + p3(1);
@@ -31,6 +29,7 @@ c2 = -p3(1) + p1(1);
 a3 = p1(1) * p2(2) - p2(1) * p1(2);
 b3 = p1(2) - p2(2);
 c3 = -p1(1) + p2(1);
+
 coeffient_matrix = [1, p1(1), p1(2); 1, p2(1), p2(2); 1, p3(1), p3(2)];
 A = 0.5 * det(coeffient_matrix);
 
@@ -50,3 +49,4 @@ phys2rst(3, 3) = 0.5 * a3 / A;
 
 end
 
+% EOF

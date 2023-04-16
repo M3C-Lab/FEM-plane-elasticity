@@ -1,4 +1,4 @@
-function [k_ele, f_ele, phys2rst] = Local_kf(msh, data, info, ee)
+function [k_ele, f_ele, phys2rst] = Local_Ass(msh, data, info, ee)
 % To get the stiffness k and load f of each triangular element.
 
 p1 = [msh.POS(info.IEN_v(1, ee), 1), msh.POS(info.IEN_v(1, ee), 2)]';
@@ -26,7 +26,7 @@ for qua = 1 : info.ntqp
     J = get_J(msh, info, data.Elem_degree, ee, info.tqp(:, qua)); 
     % info.tqp(:, qua) contains the area coordinates(r,s,t) of the
     %  quadrature point.
-    k_ele = k_ele + J * info.twq(qua) * B_qua' * info.D * B_qua;
+    k_ele = k_ele + J * info.twq(qua) * B_qua' * info.D_elast * B_qua;
     
     qua_f = data.BodyF(qua_x, qua_y);
     for aa = 1 : 6 * data.Elem_degree
@@ -43,3 +43,4 @@ end
 
 end
 
+% EOF

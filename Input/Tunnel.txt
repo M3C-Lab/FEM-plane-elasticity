@@ -14,9 +14,9 @@ Element Degree:
 End of ED
 
 Material Property:
-# Young’s modulus
+# Young's modulus
 1.0e5
-# Poisson’s ratio
+# Poisson's ratio
 0.3
 End of MP
 
@@ -50,8 +50,8 @@ End of BF
 End of File
 
 # The exact solution:
-# σrr = - pa * (b^2/r^2 - 1) / (b^2/a^2 - 1) - pb * (1 - a^2/r^2) / (1 - a^2/b^2)
-# σθθ = pa * (b^2/r^2 + 1) / (b^2/a^2 - 1) - pb * (1 + a^2/r^2) / (1 - a^2/b^2)
-# τrθ = 0
+# sigma_r_r = - pa * (b^2/r^2 - 1) / (b^2/a^2 - 1) - pb * (1 - a^2/r^2) / (1 - a^2/b^2)
+# sigma_theta_theta = pa * (b^2/r^2 + 1) / (b^2/a^2 - 1) - pb * (1 + a^2/r^2) / (1 - a^2/b^2)
+# tao_r_theta = 0
 # where a = 2 is the inner radius, b = 4 is the outer radius,
 # pa is the pressure on the inner circle, pa is the pressure on the outer circle.

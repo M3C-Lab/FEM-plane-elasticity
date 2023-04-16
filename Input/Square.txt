@@ -14,9 +14,9 @@ Element Degree:
 End of ED
 
 Material Property:
-# Young’s modulus
+# Young's modulus
 1.0e5
-# Poisson’s ratio
+# Poisson's ratio
 0.3
 End of MP
 
@@ -51,4 +51,4 @@ End of File
 
 # The exact solution:
 # ux = (exp(x)-1) / 1000,  uy = (exp(y)-1) / 1000.
-# Thus the shear stress τxy should be zero.
+# Thus the shear stress tao_xy should be zero.

@@ -18,7 +18,7 @@ for ii = 1 : msh.nbNod
     end
 end
 
-MESH = alphaShape(X, Y, 0.75 * sp_result.h, 'HoleThreshold', 1e-6);
+MESH = alphaShape(X, Y, 0.75 * sp_result.h_meshsize, 'HoleThreshold', 1e-6);
 
 figure(nb)
 plot(MESH);
@@ -29,3 +29,4 @@ set(gcf, 'unit', 'centimeters', 'position', [24 20 20 17.5]);
 
 end
 
+% EOF
